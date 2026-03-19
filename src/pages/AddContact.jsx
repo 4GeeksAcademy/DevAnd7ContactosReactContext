@@ -20,7 +20,7 @@ export const AddContact = () => {
 
   const handleSubmit = async e => {
     e.preventDefault();
-    await addContact(dispatch, form);
+    await addContact(dispatch, form);  // ← ENVÍA full_name
     navigate("/");
   };
 
