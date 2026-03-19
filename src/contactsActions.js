@@ -15,10 +15,10 @@ export const loadContacts = async (dispatch) => {
 
     const data = await res.json();
 
-    const normalized = data.contacts.map(c => ({
-      ...c,
-      full_name: c.name
-    }));
+  const normalized = (data.contacts || []).map(c => ({
+  ...c,
+  full_name: c.name
+}));
 
     dispatch({ type: "set_contacts", payload: normalized });
 

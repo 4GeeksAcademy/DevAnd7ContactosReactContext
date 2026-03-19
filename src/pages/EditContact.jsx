@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
-import { useParams, useNavigate, Link } from "react-router-dom";
+import { updateContact } from "../contactsActions";
 import useGlobalReducer from "../hooks/useGlobalReducer";
-import { updateContact, loadContacts } from "../contactsActions";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
 export const EditContact = () => {
   const { store, dispatch } = useGlobalReducer();
-  const { id } = useParams();
   const navigate = useNavigate();
+  const { id } = useParams();
+
+  const contact = store.contacts.find(c => c.id === parseInt(id));
 
   const [form, setForm] = useState({
     full_name: "",
@@ -15,16 +17,7 @@ export const EditContact = () => {
     address: ""
   });
 
-  // Cargar contactos si no están cargados
   useEffect(() => {
-    if (store.contacts.length === 0) {
-      loadContacts(dispatch);
-    }
-  }, []);
-
-  // Cuando los contactos estén cargados, rellenar el formulario
-  useEffect(() => {
-    const contact = store.contacts.find(c => c.id == id);
     if (contact) {
       setForm({
         full_name: contact.full_name,
@@ -33,7 +26,7 @@ export const EditContact = () => {
         address: contact.address
       });
     }
-  }, [store.contacts]);
+  }, [contact]);
 
   const handleChange = e => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -50,15 +43,41 @@ export const EditContact = () => {
       <h1>Edit contact</h1>
 
       <form onSubmit={handleSubmit} className="mt-4">
-        <input className="form-control mb-3" name="full_name" value={form.full_name} onChange={handleChange} />
-        <input className="form-control mb-3" name="email" value={form.email} onChange={handleChange} />
-        <input className="form-control mb-3" name="phone" value={form.phone} onChange={handleChange} />
-        <input className="form-control mb-3" name="address" value={form.address} onChange={handleChange} />
+        <input
+          className="form-control mb-3"
+          name="full_name"
+          value={form.full_name}
+          placeholder="Full Name"
+          onChange={handleChange}
+        />
+        <input
+          className="form-control mb-3"
+          name="email"
+          value={form.email}
+          placeholder="Enter email"
+          onChange={handleChange}
+        />
+        <input
+          className="form-control mb-3"
+          name="phone"
+          value={form.phone}
+          placeholder="Enter phone"
+          onChange={handleChange}
+        />
+        <input
+          className="form-control mb-3"
+          name="address"
+          value={form.address}
+          placeholder="Enter address"
+          onChange={handleChange}
+        />
 
         <button className="btn btn-primary">Save</button>
       </form>
 
-      <Link to="/" className="d-block mt-3">or get back to contacts</Link>
+      <Link to="/" className="d-block mt-3">
+        or get back to contacts
+      </Link>
     </div>
   );
 };
